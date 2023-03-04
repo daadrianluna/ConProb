@@ -1,0 +1,15 @@
+@relation 'Trades-weka.filters.unsupervised.attribute.Reorder-R1,3,4,5,6,7,8,9,10,2-weka.filters.unsupervised.attribute.NumericToNominal-Rfirst-last'
+
+@attribute 'Que tipo de trade es?' {V1,V2,V2/V3,T1}
+@attribute 'Que posicion de trade en la tendencia es?' {1,2,3}
+@attribute 'Caja millonaria' {-30,30,40}
+@attribute 'Impulso de la FYL' {Fuerte,Normal,Bajo}
+@attribute 'Impulso en las BB' {Normal,Bajo,Fuerte}
+@attribute 'Antes de iniciar la tendencia...' {'Consolidacion y cambio','Consolidacion y continuacion','Cambio de tendencia','Continuacion de la tendencia'}
+@attribute 'Hubo un previo rompimiento de areas.' {Si,No}
+@attribute 'La expectativa esta a favor... ' {No,Si}
+@attribute 'En la entrada al trade existe un area? ' {Si,No}
+@attribute 'Es un trade...' {Negativo,Positivo}
+
+@data
+T1,3,-30,Fuerte,Normal,'Consolidacion y cambio',Si,No,Si,
