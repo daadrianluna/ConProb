@@ -60,15 +60,15 @@ El corazón de la aplicación se basa en un modelo de **Aprendizaje Supervisado*
 
 ```mermaid
 flowchart TD
-    subgraph Histórico
+    subgraph H [Histórico]
         A[Tradesdataset.arff] -->|Datos de Entrenamiento| B(Entrenamiento J48)
     end
     
-    subgraph Usuario
+    subgraph U [Usuario]
         C[VentanaMain.java] -->|1. Ingresa características| D(Captura de Datos)
     end
     
-    subgraph Lógica Predictiva (Prediccion.java)
+    subgraph L [Lógica Predictiva]
         B -->|2. Genera Árbol de Decisión| E{Clasificador J48}
         D -->|3. Crea nueva instancia sin clasificar| F[testo.arff Schema]
         F -->|4. Pasa al modelo| E
