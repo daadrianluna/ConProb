@@ -5,20 +5,28 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Ventana Principal de la aplicación (GUI).
+ * Maneja la entrada de datos del usuario, los pasa al modelo predictivo
+ * y muestra el resultado en pantalla.
  *
  * @author Adrian Luna
  */
 public class VentanaMain extends javax.swing.JFrame {
 
+    // Índices seleccionados de los comboboxes. Usados por Prediccion.java
     public static int index1, index2, index3, index4, index5, index6, index7, index8, index9;
+    
+    // Almacena el resultado final predecido ("Positivo" o "Negativo")
     String finalResultado;
+    
+    // Almacena el texto del reporte de evaluación generado por Weka
     public static String info;
 
     // constructor
 
     public VentanaMain() {
 
-        this.setResizable(false);
+        this.setResizable(true); // Cambiado a true para poder ver toda la ventana en pantallas pequeñas
         this.setTitle("ConProb");
         initComponents();
 
@@ -350,27 +358,36 @@ public class VentanaMain extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)));
 
+        javax.swing.JScrollPane mainScrollPane = new javax.swing.JScrollPane(jPanel1);
+        mainScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll más suave
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+                        .addComponent(mainScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+        );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+                        .addComponent(mainScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
+        );
 
         pack();
+        
+        // Limitar la altura de la ventana a la altura de la pantalla del usuario
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        if (getHeight() > screenSize.height - 50) {
+            setSize(getWidth(), screenSize.height - 50);
+        }
+        
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botonAnalizarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_botonAnalizarActionPerformed
+    /**
+     * Acción ejecutada al presionar el botón "Analizar oportunidad".
+     * Recolecta los índices de los JComboBox y ejecuta el modelo predictivo J48.
+     */
+    private void botonAnalizarActionPerformed(java.awt.event.ActionEvent evt) {
+        // Recolectar datos ingresados
         index1 = respuesta1.getSelectedIndex();
         index2 = respuesta2.getSelectedIndex();
         index3 = respuesta3.getSelectedIndex();
@@ -384,24 +401,25 @@ public class VentanaMain extends javax.swing.JFrame {
         Prediccion predict = new Prediccion();
 
         try {
+            // Ejecutar la predicción utilizando Weka
             finalResultado = predict.getPrediccion();
         } catch (Exception ex) {
-            Logger.getLogger(VentanaMain.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VentanaMain.class.getName()).log(Level.SEVERE, "Error al generar predicción", ex);
         }
+        
+        // Actualizar la interfaz gráfica con el resultado
         this.resultadoLabel.setText(finalResultado);
 
         if ("Positivo".equals(finalResultado)) {
-            areaResultado.setBackground(Color.BLUE);
-            areaResultado.setBackground(Color.GREEN);
-
+            areaResultado.setBackground(Color.GREEN); // Mostramos verde para Positivo
         } else if ("Negativo".equals(finalResultado)) {
-            areaResultado.setBackground(Color.RED);
-
+            areaResultado.setBackground(Color.RED); // Mostramos rojo para Negativo
         }
-        this.infoArea.setText("Cargando...");
+        
+        // Mostrar el resumen del modelo en el cuadro de texto
         this.infoArea.setText(info);
 
-    }// GEN-LAST:event_botonAnalizarActionPerformed
+    }
 
     private void respuesta4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_respuesta4ActionPerformed
 
