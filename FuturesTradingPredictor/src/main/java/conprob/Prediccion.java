@@ -11,9 +11,16 @@ import java.io.InputStream;
 import java.io.File;
 
 /**
- * Clase encargada de manejar el modelo de Machine Learning (Weka).
- * Carga el dataset, entrena un clasificador J48 (Árbol de Decisión)
- * y realiza la predicción sobre nuevos datos.
+ * Clase encargada de manejar el núcleo lógico del modelo predictivo (Weka).
+ * 
+ * ARQUITECTURA Y FLUJO:
+ * 1. Entrenamiento: Al llamarse getPrediccion(), la clase carga el dataset histórico 
+ *    (Tradesdataset.arff) que contiene casos pasados de operaciones y sus resultados.
+ * 2. Algoritmo: Utiliza el clasificador J48 (Árbol de Decisión) para encontrar patrones 
+ *    matemáticos entre las 9 características del trade y su resultado final.
+ * 3. Inyección: Toma los datos seleccionados por el usuario en la GUI, crea una nueva 
+ *    instancia "en blanco" usando el esquema (testo.arff) y le pide al árbol que la clasifique.
+ * 4. Resultado: Devuelve el resultado ("Positivo" o "Negativo") para que la vista lo muestre.
  */
 public class Prediccion {
     

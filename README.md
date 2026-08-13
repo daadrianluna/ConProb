@@ -54,11 +54,35 @@ mvn clean package
 java -jar target/futures-trading-predictor-1.0-SNAPSHOT.jar
 ```
 
-## 📊 Cómo Funciona el Modelo
+## 📊 Cómo Funciona el Modelo (Arquitectura y Lógica)
 
-1. **Entrenamiento:** Al pulsar el botón de analizar, la clase `Prediccion.java` lee el archivo `Tradesdataset.arff` y entrena un modelo de Árbol de Decisión (J48).
-2. **Clasificación:** Se recogen los parámetros que seleccionaste en la interfaz y se crea una "instancia en blanco".
-3. **Resultado:** Weka clasifica esta nueva instancia pasándola por el árbol lógico. El programa interpreta la salida y cambia el color del panel a **Verde (Positivo)** o **Rojo (Negativo)**. Adicionalmente, se imprime en la parte inferior un resumen estadístico de la precisión del modelo.
+El corazón de la aplicación se basa en un modelo de **Aprendizaje Supervisado**. A continuación, se detalla el flujo arquitectónico de cómo los datos se convierten en predicciones:
+
+```mermaid
+flowchart TD
+    subgraph Histórico
+        A[Tradesdataset.arff] -->|Datos de Entrenamiento| B(Entrenamiento J48)
+    end
+    
+    subgraph Usuario
+        C[VentanaMain.java] -->|1. Ingresa características| D(Captura de Datos)
+    end
+    
+    subgraph Lógica Predictiva (Prediccion.java)
+        B -->|2. Genera Árbol de Decisión| E{Clasificador J48}
+        D -->|3. Crea nueva instancia sin clasificar| F[testo.arff Schema]
+        F -->|4. Pasa al modelo| E
+        E -->|5. Calcula probabilidad| G[Predicción Positivo/Negativo]
+    end
+    
+    G -->|6. Actualiza Interfaz| C
+```
+
+1. **Recolección Histórica (`Tradesdataset.arff`)**: El sistema utiliza un conjunto de datos recopilados previamente que contienen ejemplos de operaciones reales. Cada operación tiene 9 características descriptivas (como el tipo de trade, si hubo rompimientos, etc.) y una etiqueta final que indica si la operación resultó ser exitosa (`Positivo`) o fallida (`Negativo`).
+2. **Construcción del Modelo**: Cuando se pulsa el botón, Weka toma este archivo y entrena el algoritmo **J48**. Este algoritmo construye un **Árbol de Decisión**, encontrando los patrones matemáticos que diferencian un trade positivo de uno negativo.
+3. **Inyección de la Nueva Operación**: Las características que seleccionas en la interfaz gráfica se empaquetan en una "nueva instancia" (usando el esquema de `testo.arff`). A esta instancia se le deja la etiqueta final en blanco (`?`).
+4. **Predicción y Clasificación**: La nueva instancia se hace pasar por las ramas del Árbol de Decisión previamente construido. El modelo clasifica la instancia y decide, basándose en la historia, si terminará siendo `Positivo` o `Negativo`.
+5. **Evaluación**: A la par de la predicción, el programa realiza una evaluación del propio modelo para obtener métricas de fiabilidad y muestra estos datos en la consola de la ventana.
 
 ---
 <div align="center">
